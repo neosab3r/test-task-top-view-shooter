@@ -18,12 +18,13 @@ namespace BeeGood.Systems
             return bulletModel;
         }
 
-        public void CreateBulletView(BulletView bulletPrefab, Transform startTransform, string tagEntity, IModel ownerPlayer)
+        public BulletModel CreateBulletView(BulletView bulletPrefab, Transform startPosition, IModel ownerPlayer)
         {
-            var bullet = InstantiateExtension.Instantiate(bulletPrefab, startTransform.position, startTransform.rotation);
+            var bullet = InstantiateExtension.Instantiate(bulletPrefab, startPosition.position, startPosition.rotation);
             var model = AddView(bullet);
             model.OwnerPlayer = ownerPlayer;
-            model.TargetTagEntity = tagEntity;
+
+            return model;
         }
 
         public override void Update(float dt)

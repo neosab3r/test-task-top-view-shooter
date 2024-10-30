@@ -15,10 +15,7 @@ namespace BeeGood.Systems
 
         public override WeaponModel AddView(WeaponView view)
         {
-            var weaponModel = new WeaponModel(view)
-            {
-                BulletSystem = bulletSystem
-            };
+            var weaponModel = new WeaponModel(view, null, bulletSystem);
             Models.Add(weaponModel);
 
             return weaponModel;

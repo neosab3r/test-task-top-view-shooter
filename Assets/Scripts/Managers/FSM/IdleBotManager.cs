@@ -1,38 +1,40 @@
-﻿using BeeGood.Models;
+﻿using BeeGood.Managers.Contexts;
 using UnityEngine;
 
 namespace BeeGood.Managers
 {
-    public class IdleBotContext : IManagerContext
+    public class IdleBotManager : BaseBotManager<TransformContext>
     {
-        public Transform PointToMove;
-
-        public IdleBotContext(Transform pointToMove)
-        {
-            PointToMove = pointToMove;
-        }
-    }
-    
-    public class IdleBotManager : BaseBotManager<IdleBotContext>
-    {
-        private BotModel parentBotModel;
-        
-        public IdleBotManager(BotModel botModel)
-        {
-            parentBotModel = botModel;
-        }
-        
-        public override bool IsSetContext()
-        {
-            var point = PatrolPointsManager.Instance.GetRandomPatrolPoint();
-            var context = new IdleBotContext(point);
-            SetContext(context);
-            return true;
-        }
-
         public override BotManagerState Evaluate()
         {
-            return base.Evaluate();
+            var checkSearchContext = Parent.GetManager<BotSequenceManager>().GetManager<CheckSearchZoneBotManager>().Context;
+            if (checkSearchContext != null)
+            {
+                State = BotManagerState.Failed;
+                return State;
+            }
+
+            if (Context == null)
+            {
+                Debug.LogError($"[{nameof(IdleBotManager)}] -- Context is null. Setting new Context");
+                var point = PatrolPointsManager.Instance.GetRandomPatrolPoint();
+                var context = new TransformContext(point);
+                SetContext(context);
+            }
+
+            Debug.LogError($"[{nameof(IdleBotManager)}] Try SetMovePoint");
+            var pointToMove = Context.Transform;
+            OwnerBotModel.SetMovePoint(pointToMove);
+
+            var distance = Vector3.Distance(OwnerBotModel.CachedTransform.position, Context.Transform.position);
+            if (distance < 0.3f)
+            {
+                Debug.LogError($"[{nameof(IdleBotManager)}] Bot has reached patrol point.");
+                Context = null;
+            }
+
+            State = BotManagerState.Running;
+            return State;
         }
     }
 }

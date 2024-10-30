@@ -14,7 +14,7 @@ namespace BeeGood.Models
         private BulletData cachedBulletData;
         private Vector3 cachedDirection;
         private int countRicochets = 0;
-        
+
         public BulletModel(BulletView view) : base(view)
         {
             cachedViewTransform = view.transform;
@@ -23,7 +23,20 @@ namespace BeeGood.Models
             view.SubscribeOnTriggerEnterEvent(OnCollision);
         }
 
-        private void OnCollision(Collision collision)
+        public void TryMove()
+        {
+            if (ReadyToDestroy == false)
+            {
+                cachedViewTransform.position += cachedDirection * cachedBulletData.bulletSpeed * Time.deltaTime;
+            }
+        }
+
+        public void SetDirection(Vector3 direction)
+        {
+            cachedDirection = direction;
+        }
+
+    private void OnCollision(Collision collision)
         {
             var tagGameObject = collision.gameObject.tag;
             if (string.IsNullOrEmpty(tagGameObject))
@@ -70,14 +83,6 @@ namespace BeeGood.Models
         private void SetReadyToDestroy()
         {
             ReadyToDestroy = true;
-        }
-
-        public void TryMove()
-        {
-            if (ReadyToDestroy == false)
-            {
-                cachedViewTransform.position += cachedDirection * cachedBulletData.bulletSpeed * Time.deltaTime;   
-            }
         }
 
         public void DestroyBulletView()

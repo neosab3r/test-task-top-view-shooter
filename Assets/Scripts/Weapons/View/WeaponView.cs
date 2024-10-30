@@ -1,5 +1,4 @@
 ﻿using System;
-using BeeGood.Systems;
 using UnityEngine;
 
 namespace BeeGood.Views
@@ -13,15 +12,6 @@ namespace BeeGood.Views
         [SerializeField] private BulletView bulletPrefab;
         [SerializeField] private WeaponData weaponData;
         [SerializeField] private Transform bulletStartPosition;
-        
-        private void Start()
-        {
-            BaseEntrySystems.SubscribeOnAllSystemsInitialized(() =>
-            {
-                EntrySystem.Instance.Get<WeaponSystem>().AddView(this);
-            });
-        }
-
     }
 }
 
