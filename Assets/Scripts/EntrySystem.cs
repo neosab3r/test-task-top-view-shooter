@@ -24,6 +24,8 @@ namespace BeeGood
             AddSystem(new PlayerSystem());
             AddSystem(new WeaponSystem());
             AddSystem(new BulletSystem());
+            AddSystem(new BotSystem());
+            
             base.Initialize();
         }
     }

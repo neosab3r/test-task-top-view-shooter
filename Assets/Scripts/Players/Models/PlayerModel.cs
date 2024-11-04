@@ -6,21 +6,22 @@ namespace BeeGood.Models
 {
     public class PlayerModel : BaseModel<PlayerView>
     {
-        public WeaponModel WeaponModel;
+        public WeaponModel WeaponModel { get; protected set; }
 
-        private Transform cachedTransform;
+        public Transform CachedTransform { get; protected set; }
         private Transform cachedHandTransform;
         private const float MoveSpeed = 5f;
 
-        public PlayerModel(PlayerView view) : base(view)
+        public PlayerModel(PlayerView view, WeaponModel weaponModel) : base(view)
         {
-            cachedTransform = view.transform;
-            cachedHandTransform = view.GetHandTransform;
+            CachedTransform = view.transform;
+            cachedHandTransform = view.GetHandTransform();
+            WeaponModel = weaponModel;
         }
 
         public void Move(float horizontal, float vertical)
         {
-            cachedTransform.position += (-cachedTransform.forward * horizontal + cachedTransform.right * vertical) * Time.fixedDeltaTime * MoveSpeed;
+            CachedTransform.position += (-CachedTransform.forward * horizontal + CachedTransform.right * vertical) * Time.deltaTime * MoveSpeed;
         }
 
         public void Look(Vector3 position)
@@ -32,7 +33,12 @@ namespace BeeGood.Models
 
         public void TryShoot()
         {
-            WeaponModel.Shoot(TagExtension.BotTag);
+            if (WeaponModel.IsReloading())
+            {
+                return;
+            }
+            
+            WeaponModel.Shoot(TagExtension.BotTag, Vector3.zero);
         }
     }
 }

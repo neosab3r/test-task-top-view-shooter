@@ -1,4 +1,5 @@
-﻿using BeeGood.Extensions;
+﻿using System.Linq;
+using BeeGood.Extensions;
 using BeeGood.Models;
 using BeeGood.Views;
 using UnityEngine;
@@ -9,7 +10,9 @@ namespace BeeGood.Systems
     {
         public override bool HasUpdate() => true;
 
-        public override void Initialize() { }
+        public override void Initialize()
+        {
+        }
 
         public override BulletModel AddView(BulletView view)
         {
@@ -18,12 +21,24 @@ namespace BeeGood.Systems
             return bulletModel;
         }
 
-        public void CreateBulletView(BulletView bulletPrefab, Transform startTransform, string tagEntity, IModel ownerPlayer)
+        public BulletModel GetBulletModelByView(BulletView view)
         {
-            var bullet = InstantiateExtension.Instantiate(bulletPrefab, startTransform.position, startTransform.rotation);
+            foreach (var model in Models.Where(model => model.View == view))
+            {
+                return model;
+            }
+            
+            Debug.LogError($"No founded {nameof(BulletModel)} for {nameof(BulletView)} with name {view.name}");
+            return default;
+        }
+
+        public BulletModel CreateBulletView(BulletView bulletPrefab, Transform startPosition, IModel ownerPlayer)
+        {
+            var bullet = InstantiateExtension.Instantiate(bulletPrefab, startPosition.position, startPosition.rotation);
             var model = AddView(bullet);
             model.OwnerPlayer = ownerPlayer;
-            model.TargetTagEntity = tagEntity;
+
+            return model;
         }
 
         public override void Update(float dt)

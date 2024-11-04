@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: -4953514275876455378}
   m_Layer: 0
   m_Name: BulletView
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -121,8 +121,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletData:
     maxRicochets: 1
-    bulletSpeed: 10
-  bulletRigidbody: {fileID: -4953514275876455378}
+    bulletSpeed: 5
 --- !u!54 &-4953514275876455378
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -149,4 +148,4 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2

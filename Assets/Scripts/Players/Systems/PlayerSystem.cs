@@ -29,15 +29,17 @@ namespace BeeGood.Systems
 
         public override PlayerModel AddView(PlayerView view)
         {
-            var weaponModel = weaponSystem.GetModelByView(view.GetWeaponView);
-            var playerModel = new PlayerModel(view)
-            {
-                WeaponModel = weaponModel
-            };
-            weaponModel.OwnerPlayer = playerModel;
+            var weaponModel = weaponSystem.AddView(view.GetWeaponView());
+            var playerModel = new PlayerModel(view, weaponModel);
+            weaponModel.SetOwnerPlayer(playerModel);
+            
             Models.Add(playerModel);
-
             return playerModel;
+        }
+
+        public PlayerModel GetPlayerModel()
+        {
+            return Models[0];
         }
 
         private void GetInputActions()

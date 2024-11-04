@@ -6,15 +6,17 @@ TagManager:
   tags:
   - Wall
   - Border
+  - Bot
+  - Bullet
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Obstacle
   - Water
   - UI
-  - 
-  - 
+  - Ground
+  - Player
   - 
   - 
   - 

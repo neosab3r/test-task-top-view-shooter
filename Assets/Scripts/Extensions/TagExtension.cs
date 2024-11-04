@@ -6,5 +6,6 @@
         public static string PlayerTag = "Player";
         public static string WallTag = "Wall";
         public static string BorderTag = "Border";
+        public static string BulletTag = "Bullet";
     }
 }
