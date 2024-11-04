@@ -5,6 +5,7 @@ namespace BeeGood.Managers
 {
     public class IdleBotManager : BaseBotManager<TransformContext>
     {
+        private const float MinEndDistance = 0.3f;
         public override BotManagerState Evaluate()
         {
             var checkSearchContext = Parent.GetManager<BotSequenceManager>().GetManager<CheckSearchZoneBotManager>().Context;
@@ -24,10 +25,10 @@ namespace BeeGood.Managers
 
             Debug.LogError($"[{nameof(IdleBotManager)}] Try SetMovePoint");
             var pointToMove = Context.Transform;
-            OwnerBotModel.SetMovePoint(pointToMove);
-
+            OwnerBotModel.SetMovePoint(pointToMove, MinEndDistance);
+            
             var distance = Vector3.Distance(OwnerBotModel.CachedTransform.position, Context.Transform.position);
-            if (distance < 0.3f)
+            if (distance <= MinEndDistance)
             {
                 Debug.LogError($"[{nameof(IdleBotManager)}] Bot has reached patrol point.");
                 Context = null;

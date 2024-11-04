@@ -21,7 +21,7 @@ namespace BeeGood.Models
 
         public void Move(float horizontal, float vertical)
         {
-            CachedTransform.position += (-CachedTransform.forward * horizontal + CachedTransform.right * vertical) * Time.fixedDeltaTime * MoveSpeed;
+            CachedTransform.position += (-CachedTransform.forward * horizontal + CachedTransform.right * vertical) * Time.deltaTime * MoveSpeed;
         }
 
         public void Look(Vector3 position)
@@ -33,6 +33,11 @@ namespace BeeGood.Models
 
         public void TryShoot()
         {
+            if (WeaponModel.IsReloading())
+            {
+                return;
+            }
+            
             WeaponModel.Shoot(TagExtension.BotTag, Vector3.zero);
         }
     }

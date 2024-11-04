@@ -23,9 +23,15 @@ namespace BeeGood.Managers
         {
             this.weaponModel = weaponModel;
         }
-        
+
         public override BotManagerState Evaluate()
         {
+            if (weaponModel.IsReloading())
+            {
+                State = BotManagerState.Running;
+                return State;
+            }
+
             var searchBotManagerContext = Parent.GetManager<CheckSearchZoneBotManager>().Context;
             if (searchBotManagerContext == null)
             {
@@ -37,25 +43,23 @@ namespace BeeGood.Managers
             var player = searchBotManagerContext.Transform;
             var botTransform = OwnerBotModel.CachedTransform;
             var handTransform = OwnerBotModel.CachedHandTransform;
-            var handDirection = searchBotManagerContext.HandToPlayerDirection;
+            var bulletToPlayerDirection = searchBotManagerContext.BulletToPlayerDirection;
             var isVisible = searchBotManagerContext.IsVisible;
             
             var inAttackAngle = false;
-            var attackDot = Vector3.Dot(handTransform.forward, Vector3.Normalize(handDirection));
-            
-            if (attackDot >= 0.8)
+            var attackDot = Vector3.Dot(handTransform.forward, Vector3.Normalize(bulletToPlayerDirection));
+            if (attackDot >= 0.9)
             {
                 inAttackAngle = true;
             }
 
             if (isVisible == false || inAttackAngle == false)
             {
-                //Debug.LogWarning($"{nameof(AttackBotManager)} cannot be shoot because Enemy: isVisible: {isVisible} InAttackAngle: {inAttackAngle}");
                 State = BotManagerState.Failed;
                 return State;
             }
 
-            weaponModel.Shoot(TagExtension.PlayerTag, handDirection);
+            weaponModel.Shoot(TagExtension.PlayerTag, Vector3.Normalize(bulletToPlayerDirection));
             State = BotManagerState.Success;
             return State;
         }

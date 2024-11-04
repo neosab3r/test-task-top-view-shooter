@@ -1,6 +1,10 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
+using BeeGood.Extensions;
 using BeeGood.Managers;
+using BeeGood.Systems;
 using BeeGood.View;
+using BeeGood.Views;
 using Pathfinding;
 using UnityEngine;
 
@@ -11,17 +15,23 @@ namespace BeeGood.Models
         public WeaponModel WeaponModel { get; protected set; }
         public Transform CachedTransform { get; protected set; }
         public Transform CachedHandTransform { get; protected set; }
-
+        public AIPath CachedAIPath { get; protected set; }
+        public Dictionary<GameObject, BulletModel> NearBulletModels { get; protected set; } = new();
+        private BulletSystem bulletSystem;
         private BotSelectorManager rootSelectorManager;
         private AIDestinationSetter AiDestinationSetter;
         private bool isDeath;
 
-        public BotModel(BotView view, WeaponModel weaponModel): base(view)
+        public BotModel(BotView view, BulletSystem bulletSystem , WeaponModel weaponModel): base(view)
         {
+            WeaponModel = weaponModel;
+            this.bulletSystem = bulletSystem;
             CachedTransform = view.transform;
             CachedHandTransform = view.GetHandTransform();
             AiDestinationSetter = view.GetAIDestinationSetter();
-            WeaponModel = weaponModel;
+            CachedAIPath = view.GetAIPath();
+            view.SubscribeOnTriggerEnterEvent(SetEnteredBullet);
+            view.SubscribeOnTriggerExitEvent(DeleteBullet);
         }
 
         public void CreateManagers()
@@ -34,6 +44,7 @@ namespace BeeGood.Models
             
             var managers = new List<IBotManager>
             {
+                new EvasionBotManager(),
                 new BotSequenceManager(this, new List<IBotManager>
                 {
                     new CheckSearchZoneBotManager(),
@@ -51,7 +62,7 @@ namespace BeeGood.Models
             rootSelectorManager = new BotSelectorManager(this, managers);
         }
 
-        public void SetMovePoint(Transform target)
+        public void SetMovePoint(Transform target, float endDistance)
         {
             if (AiDestinationSetter.target != null && target == AiDestinationSetter.target)
             {
@@ -61,6 +72,7 @@ namespace BeeGood.Models
             var targetName = target == null ? "Null" : target.gameObject.name;
             Debug.LogWarning($"Setting move point to {targetName}");
             AiDestinationSetter.target = target;
+            CachedAIPath.endReachedDistance = endDistance;
         }
         
         public void UpdateBotManagers()
@@ -71,6 +83,43 @@ namespace BeeGood.Models
             }
 
             rootSelectorManager.Evaluate();
+        }
+
+        private void SetEnteredBullet(Collider collider)
+        {
+            var ga = collider.gameObject;
+            var tag = ga.tag;
+            
+            if (string.Equals(tag, TagExtension.BulletTag) == false)
+            {
+                return;
+            }
+            
+            if (NearBulletModels.ContainsKey(ga))
+            {
+                Debug.LogError($"Bot already has this bullet in dictionary");
+                return;
+            }
+            var bulletView = ga.GetComponent<BulletView>();
+            var bulletModel = bulletSystem.GetBulletModelByView(bulletView);
+            
+            if (bulletModel.GetOwnerTag() == TagExtension.BotTag)
+            {
+                return;
+            }
+            
+            Debug.LogError("Bullet entered");
+            NearBulletModels.Add(ga, bulletModel);
+        }
+
+        private void DeleteBullet(Collider collider)
+        {
+            var ga = collider.gameObject;
+
+            if (NearBulletModels.ContainsKey(ga))
+            {
+                NearBulletModels.Remove(ga);
+            }
         }
 
         public override void Dispose()

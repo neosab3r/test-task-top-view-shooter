@@ -10,16 +10,16 @@ namespace BeeGood.Views
         
         public BulletData BulletData => bulletData;
         
+        public void SubscribeOnCollisionEvent(Action<Collision> action)
+        {
+            OnCollisionEnterEvent += action;
+        }
+        
         private void OnCollisionEnter(Collision collision)
         {
             OnCollisionEnterEvent?.Invoke(collision);
         }
-
-        public void SubscribeOnTriggerEnterEvent(Action<Collision> action)
-        {
-            OnCollisionEnterEvent += action;
-        }
-
+        
         public void Dispose()
         {
             OnCollisionEnterEvent = null;

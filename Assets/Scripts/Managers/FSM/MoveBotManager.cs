@@ -1,10 +1,12 @@
-﻿using BeeGood.Managers.Contexts;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace BeeGood.Managers
 {
-    public class MoveBotManager : BaseBotManager<TransformContext>
+    public class MoveBotManager : BaseBotManager<EmptyContext>
     {
+        private const float MinEnemyEndDistance = 3f;
+        private const float MinEndDistance = 0.3f;
+
         public override BotManagerState Evaluate()
         {
             var searchBotManagerContext = Parent.Parent.GetManager<CheckSearchZoneBotManager>().Context;
@@ -14,16 +16,17 @@ namespace BeeGood.Managers
                 State = BotManagerState.Failed;
                 return State;
             }
+
+            var context = searchBotManagerContext;
+            var point = context.Transform;
+            var minDistance = context.IsVisible ? MinEnemyEndDistance : MinEndDistance;
+            OwnerBotModel.SetMovePoint(point, minDistance);
             
-            Context = new TransformContext(searchBotManagerContext.Transform);
-            var point = Context.Transform;
-            OwnerBotModel.SetMovePoint(point);
-            
-            if (Vector3.Distance(OwnerBotModel.CachedTransform.position, Context.Transform.position) < 3f)
+            if (Vector3.Distance(OwnerBotModel.CachedTransform.position, point.position) <= minDistance)
             {
                 Debug.LogError($"Bot has reached Enemy.");
                 Context = null;
-                OwnerBotModel.SetMovePoint(null);
+                OwnerBotModel.SetMovePoint(null, minDistance);
                 return BotManagerState.Running;
             }
             

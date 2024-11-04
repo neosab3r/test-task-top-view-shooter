@@ -6,18 +6,19 @@ namespace BeeGood.Systems
     public class BotSystem : BaseSystem<BotModel, BotView>
     {
         private WeaponSystem weaponSystem;
-
+        private BulletSystem bulletSystem;
         public override bool HasUpdate() => true;
 
         public override void Initialize()
         {
             weaponSystem = EntrySystem.Instance.Get<WeaponSystem>();
+            bulletSystem = EntrySystem.Instance.Get<BulletSystem>();
         }
 
         public override BotModel AddView(BotView view)
         {
             var weaponModel = weaponSystem.AddView(view.GetWeaponView());
-            var botModel = new BotModel(view, weaponModel);
+            var botModel = new BotModel(view, bulletSystem, weaponModel);
             weaponModel.SetOwnerPlayer(botModel);
             botModel.CreateManagers();
             

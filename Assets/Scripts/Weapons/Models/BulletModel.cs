@@ -7,27 +7,32 @@ namespace BeeGood.Models
     public class BulletModel : BaseModel<BulletView>
     {
         public bool ReadyToDestroy { get; private set; }
+        public Transform CachedViewTransform { get; private set; }
         public string TargetTagEntity = "";
         public IModel OwnerPlayer;
 
-        private Transform cachedViewTransform;
         private BulletData cachedBulletData;
         private Vector3 cachedDirection;
         private int countRicochets = 0;
 
+        public Vector3 GetDirection() => cachedDirection;
+        
         public BulletModel(BulletView view) : base(view)
         {
-            cachedViewTransform = view.transform;
-            cachedDirection = cachedViewTransform.forward;
+            CachedViewTransform = view.transform;
+            cachedDirection = CachedViewTransform.forward;
             cachedBulletData = view.BulletData;
-            view.SubscribeOnTriggerEnterEvent(OnCollision);
+            view.SubscribeOnCollisionEvent(OnCollision);
         }
 
         public void TryMove()
         {
             if (ReadyToDestroy == false)
             {
-                cachedViewTransform.position += cachedDirection * cachedBulletData.bulletSpeed * Time.deltaTime;
+                var worldForward = CachedViewTransform.position + cachedDirection;
+                Debug.DrawLine(CachedViewTransform.position, worldForward, Color.yellow);
+                CachedViewTransform.position += cachedDirection * cachedBulletData.bulletSpeed * Time.deltaTime;
+                //cachedViewTransform.Translate( * Time.deltaTime * cachedBulletData.bulletSpeed);
             }
         }
 
@@ -36,9 +41,17 @@ namespace BeeGood.Models
             cachedDirection = direction;
         }
 
-    private void OnCollision(Collision collision)
+        public string GetOwnerTag()
+        {
+            return TargetTagEntity == TagExtension.BotTag ? TagExtension.PlayerTag : TagExtension.BotTag;
+        }
+        
+        private void OnCollision(Collision collision)
         {
             var tagGameObject = collision.gameObject.tag;
+            var ownerTag = GetOwnerTag();
+            
+            Debug.LogError($"Owner: {ownerTag}");
             if (string.IsNullOrEmpty(tagGameObject))
             {
                 Debug.LogError($"{nameof(BulletModel)} -- Collision GameObject with name {collision.gameObject.name} has no tag. BulletModel Owner -- {nameof(OwnerPlayer)}");
@@ -49,6 +62,16 @@ namespace BeeGood.Models
                 return;
             }
 
+            if (string.Equals(tagGameObject, ownerTag))
+            {
+                return;
+            }
+
+            if (string.Equals(tagGameObject, TagExtension.BulletTag))
+            {
+                return;
+            }
+            
             if (string.Equals(tagGameObject, TagExtension.BorderTag))
             {
                 SetReadyToDestroy();
@@ -89,7 +112,7 @@ namespace BeeGood.Models
         {
             View.Dispose();
             Object.Destroy(View.gameObject);
-            cachedViewTransform = null;
+            CachedViewTransform = null;
             View = null;
         }
 
