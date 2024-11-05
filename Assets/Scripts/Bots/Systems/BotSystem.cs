@@ -40,7 +40,8 @@ namespace BeeGood.Systems
             for (var i = Models.Count - 1; i >= 0; i--)
             {
                 var botModel = Models[i];
-                
+                botModel.Dispose();
+                RemoveModel(botModel);
             }
         }
     }

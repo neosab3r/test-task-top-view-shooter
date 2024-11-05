@@ -19,7 +19,8 @@ namespace BeeGood
             
             Initialize();
             
-            GameManager.Instance.StartGame();
+            GameManager.Initialize();
+            GameManager.Instance.StartGame(botCount: 1, stopSystems: true);
         }
 
         protected override void Initialize()

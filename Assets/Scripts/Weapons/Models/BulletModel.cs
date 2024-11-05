@@ -1,4 +1,5 @@
 ﻿using BeeGood.Extensions;
+using BeeGood.Managers;
 using BeeGood.Views;
 using UnityEngine;
 
@@ -83,6 +84,9 @@ namespace BeeGood.Models
                 Debug.LogWarning("Damage to Enemy Entity");
                 //Damage
                 SetReadyToDestroy();
+                var isPlayerWin = tagGameObject == TagExtension.BotTag;
+                Debug.LogError($"IsPlayerWin: {isPlayerWin}");
+                GameManager.Instance.EndRound(isPlayerWin);
             }
             else
             {

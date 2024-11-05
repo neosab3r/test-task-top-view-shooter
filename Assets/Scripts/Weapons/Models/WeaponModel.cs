@@ -70,7 +70,10 @@ namespace BeeGood.Models
             BulletSystem = null;
             weaponData = null;
             cachedBulletPrefab = null;
-            Object.Destroy(View.gameObject);
+            if (View != null)
+            {
+                Object.Destroy(View.gameObject);
+            }
             View = null;
         }
     }

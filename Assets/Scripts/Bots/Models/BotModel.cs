@@ -137,6 +137,13 @@ namespace BeeGood.Models
                 rootSelectorManager.Dispose();
                 rootSelectorManager = null;
             }
+
+            if (View.gameObject != null)
+            {
+                Object.Destroy(View.gameObject);
+            }
+
+            View = null;
         }
     }
 }

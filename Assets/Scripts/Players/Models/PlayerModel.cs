@@ -46,7 +46,7 @@ namespace BeeGood.Models
             WeaponModel = null;
             CachedTransform = null;
             cachedHandTransform = null;
-            if (View.gameObject != null)
+            if (View != null)
             {
                 Object.Destroy(View.gameObject);
             }
