@@ -12,11 +12,9 @@ namespace BeeGood.View
         [SerializeField] private WeaponView weaponView;
         [SerializeField] private Transform handTransform;
         [SerializeField] private AIPath aiPath;
-        [SerializeField] private Seeker aiSeeker;
         private event Action<Collider> OnTriggerEnterEvent;
         private event Action<Collider> OnTriggerExitEvent;
 
-        public Seeker GetSeeker() => aiSeeker;
         public AIPath GetAIPath() => aiPath;
         public Transform GetHandTransform() => handTransform;
         public AIDestinationSetter GetAIDestinationSetter() => aiDestinationSetter;

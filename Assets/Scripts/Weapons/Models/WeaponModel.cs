@@ -63,5 +63,15 @@ namespace BeeGood.Models
                 }
             }
         }
+
+        public override void Dispose()
+        {
+            OwnerPlayer = null;
+            BulletSystem = null;
+            weaponData = null;
+            cachedBulletPrefab = null;
+            Object.Destroy(View.gameObject);
+            View = null;
+        }
     }
 }

@@ -40,5 +40,17 @@ namespace BeeGood.Models
             
             WeaponModel.Shoot(TagExtension.BotTag, Vector3.zero);
         }
+
+        public override void Dispose()
+        {
+            WeaponModel = null;
+            CachedTransform = null;
+            cachedHandTransform = null;
+            if (View.gameObject != null)
+            {
+                Object.Destroy(View.gameObject);
+            }
+            View = null;
+        }
     }
 }

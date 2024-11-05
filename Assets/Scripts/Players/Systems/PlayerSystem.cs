@@ -53,5 +53,15 @@ namespace BeeGood.Systems
                 model.Look(mousePosition);
             }
         }
+
+        public override void Dispose()
+        {
+            for (var i = Models.Count - 1; i >= 0; i--)
+            {
+                var playerModel = Models[i];
+                playerModel.Dispose();
+                RemoveModel(playerModel);
+            }
+        }
     }
 }

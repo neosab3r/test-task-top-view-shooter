@@ -28,10 +28,20 @@ namespace BeeGood.Systems
 
         public override void Update(float dt)
         {
-            for (int i = Models.Count - 1; i >= 0; i--)
+            for (var i = Models.Count - 1; i >= 0; i--)
             {
                 var weaponModel = Models[i];
                 weaponModel.Update(dt);
+            }
+        }
+
+        public override void Dispose()
+        {
+            for (int i = Models.Count - 1; i >= 0; i--)
+            {
+                var weaponModel = Models[i];
+                weaponModel.Dispose();
+                RemoveModel(weaponModel);
             }
         }
     }

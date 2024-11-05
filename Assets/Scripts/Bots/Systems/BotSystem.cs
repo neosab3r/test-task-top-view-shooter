@@ -34,5 +34,14 @@ namespace BeeGood.Systems
                 bot.UpdateBotManagers();
             }
         }
+
+        public override void Dispose()
+        {
+            for (var i = Models.Count - 1; i >= 0; i--)
+            {
+                var botModel = Models[i];
+                
+            }
+        }
     }
 }

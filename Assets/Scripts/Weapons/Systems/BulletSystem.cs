@@ -57,5 +57,16 @@ namespace BeeGood.Systems
                 model.TryMove();
             }
         }
+
+        public override void Dispose()
+        {
+            for (var i = Models.Count - 1; i >= 0; i--)
+            {
+                var model = Models[i];
+                model.DestroyBulletView();
+                model.Dispose();
+                RemoveModel(model);
+            }
+        }
     }
 }

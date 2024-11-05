@@ -124,6 +124,14 @@ namespace BeeGood.Models
 
         public override void Dispose()
         {
+            WeaponModel = null;
+            CachedTransform = null;
+            CachedHandTransform = null;
+            CachedAIPath = null;
+            NearBulletModels.Clear();
+            NearBulletModels = null;
+            bulletSystem = null;
+            AiDestinationSetter = null;
             if (rootSelectorManager != null)
             {
                 rootSelectorManager.Dispose();

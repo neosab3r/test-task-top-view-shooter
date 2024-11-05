@@ -1,4 +1,5 @@
-﻿using BeeGood.Systems;
+﻿using BeeGood.Managers;
+using BeeGood.Systems;
 using UnityEngine;
 
 namespace BeeGood
@@ -17,6 +18,8 @@ namespace BeeGood
             Instance = this;
             
             Initialize();
+            
+            GameManager.Instance.StartGame();
         }
 
         protected override void Initialize()
