@@ -14,12 +14,14 @@ namespace BeeGood.View
         public float MaxEvasionSpeed;
         public float DefaultSpeed;
         public float SearchZone;
+        public float EvasionZone;
         public float AttackAngle;
         public float RotateWeaponSpeed;
     }
     
     public class BotView : BaseView
     {
+        [SerializeField] private SphereCollider evasionCollider;
         [SerializeField] private AIDestinationSetter aiDestinationSetter;
         [SerializeField] private WeaponView weaponView;
         [SerializeField] private Transform handTransform;
@@ -41,6 +43,7 @@ namespace BeeGood.View
         {
             currentBotData = type == DifficultType.Easy ? easyBotData : hardBotData;
             aiPath.maxSpeed = currentBotData.DefaultSpeed;
+            evasionCollider.radius = currentBotData.EvasionZone;
             BaseEntrySystems.SubscribeOnAllSystemsInitialized(() =>
             {
                 EntrySystem.Instance.Get<BotSystem>().AddView(this);

@@ -9,15 +9,15 @@ namespace BeeGood.Managers
 
         public override BotManagerState Evaluate()
         {
-            var searchBotManagerContext = Parent.Parent.GetManager<CheckSearchZoneBotManager>().Context;
-            if (searchBotManagerContext == null)
+            var searchBotManager = Parent.Parent.GetManager<CheckSearchZoneBotManager>();
+            if (searchBotManager == null)
             {
                 Debug.LogWarning($"{nameof(MoveBotManager)} Evaluate Failed because {nameof(CheckSearchZoneBotManager)} context not found.");
                 State = BotManagerState.Failed;
                 return State;
             }
-
-            var context = searchBotManagerContext;
+            
+            var context = searchBotManager.Context;
             var point = context.Transform;
             var minDistance = context.IsVisible ? MinEnemyEndDistance : MinEndDistance;
             OwnerBotModel.SetMovePoint(point, minDistance);

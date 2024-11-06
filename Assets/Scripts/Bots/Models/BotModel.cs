@@ -46,13 +46,9 @@ namespace BeeGood.Models
             }
 
             var managers = new List<IBotManager>();
-            if (Data.DifficultType == DifficultType.Hard)
-            {
-                managers.Add(new EvasionBotManager());
-            }
-
             managers.AddRange(new List<IBotManager>
             {
+                new EvasionBotManager(),
                 new BotSequenceManager(this, new List<IBotManager>
                 {
                     new CheckSearchZoneBotManager(),

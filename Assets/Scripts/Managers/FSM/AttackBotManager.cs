@@ -32,14 +32,15 @@ namespace BeeGood.Managers
                 return State;
             }
 
-            var searchBotManagerContext = Parent.GetManager<CheckSearchZoneBotManager>().Context;
-            if (searchBotManagerContext == null)
+            var searchBotManager = Parent.GetManager<CheckSearchZoneBotManager>();
+            if (searchBotManager == null)
             {
                 Debug.LogWarning($"{nameof(AttackBotManager)} Evaluate Failed because {nameof(CheckSearchZoneBotManager)} context not found.");
                 State = BotManagerState.Failed;
                 return State;
             }
 
+            var searchBotManagerContext = searchBotManager.Context;
             var player = searchBotManagerContext.Transform;
             var botTransform = OwnerBotModel.CachedTransform;
             var handTransform = OwnerBotModel.CachedHandTransform;

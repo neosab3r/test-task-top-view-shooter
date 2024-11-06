@@ -46,7 +46,8 @@ namespace BeeGood.Systems
         {
             var horizontal = Input.GetAxis("Horizontal");
             var vertical = Input.GetAxis("Vertical");
-            var mousePosition = MouseExtension.GetMousePosition();
+            var mousePosition = MouseExtension.GetMousePositionByRay();
+            //Debug.DrawRay(mousePosition, Vector3.up, Color.yellow);
             foreach (var model in Models)
             {
                 model.Move(horizontal, vertical);

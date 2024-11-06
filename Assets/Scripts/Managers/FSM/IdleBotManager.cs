@@ -8,11 +8,14 @@ namespace BeeGood.Managers
         private const float MinEndDistance = 0.3f;
         public override BotManagerState Evaluate()
         {
-            var checkSearchContext = Parent.GetManager<BotSequenceManager>().GetManager<CheckSearchZoneBotManager>().Context;
-            if (checkSearchContext != null)
+            var checkSearchManager = Parent.GetManager<BotSequenceManager>().GetManager<CheckSearchZoneBotManager>();
+            if (checkSearchManager != null)
             {
-                State = BotManagerState.Failed;
-                return State;
+                if (checkSearchManager.Context != null)
+                {
+                    State = BotManagerState.Failed;
+                    return State;
+                }
             }
 
             if (Context == null)

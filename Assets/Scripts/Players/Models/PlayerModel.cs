@@ -10,7 +10,7 @@ namespace BeeGood.Models
 
         public Transform CachedTransform { get; protected set; }
         private Transform cachedHandTransform;
-        private const float MoveSpeed = 5f;
+        private const float MoveSpeed = 4f;
 
         public PlayerModel(PlayerView view, WeaponModel weaponModel) : base(view)
         {
@@ -24,11 +24,17 @@ namespace BeeGood.Models
             CachedTransform.position += (-CachedTransform.forward * horizontal + CachedTransform.right * vertical) * Time.deltaTime * MoveSpeed;
         }
 
-        public void Look(Vector3 position)
+        public void Look(Vector3 position1)
         {
-            var direction = position - cachedHandTransform.position;
-            direction.y = 0;
-            cachedHandTransform.forward = direction;
+            var mousePos = Input.mousePosition;
+            var screenToCameraDistance = Camera.main.transform.position.y - CachedTransform.position.y;
+            var mousePosNearClipPlane = new Vector3(mousePos.x, mousePos.y, screenToCameraDistance);
+
+            var mousePosition = Camera.main.ScreenToWorldPoint(mousePosNearClipPlane);
+            var targetDir = mousePosition - cachedHandTransform.position;
+            var handLookRotation = Quaternion.LookRotation(targetDir, Vector3.up);
+
+            cachedHandTransform.rotation = handLookRotation;
         }
 
         public void TryShoot()

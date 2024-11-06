@@ -92,13 +92,13 @@ namespace BeeGood.UI
         {
             if (type == DifficultType.Easy)
             {
-                descriptionObj[0].text = "Маленькая скорость";
-                descriptionObj[1].text = "Боты не уклоняются";
+                descriptionObj[0].text = "Средняя скорость";
+                descriptionObj[1].text = "Боты уклоняются медленно";
             }
             else
             {
-                descriptionObj[0].text = "Средняя скорость";
-                descriptionObj[1].text = "Боты уклоняются";
+                descriptionObj[0].text = "Высокая скорость";
+                descriptionObj[1].text = "Боты очень осторожны";
             }
         }
     }

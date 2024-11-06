@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c7dc5932cfe49278ff83f5229abbb61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  evasionCollider: {fileID: 6666568706352983373}
   aiDestinationSetter: {fileID: 236455582617300362}
   weaponView: {fileID: 4576949752224617203}
   handTransform: {fileID: 643633792980094617}
@@ -58,16 +59,18 @@ MonoBehaviour:
     DifficultType: 1
     MaxEvasionSpeed: 4
     DefaultSpeed: 2
-    SearchZone: 9
+    SearchZone: 8
+    EvasionZone: 4
     AttackAngle: 0.9
     RotateWeaponSpeed: 2
   hardBotData:
     DifficultType: 2
     MaxEvasionSpeed: 6
     DefaultSpeed: 4
-    SearchZone: 16
-    AttackAngle: 0.7
-    RotateWeaponSpeed: 6
+    SearchZone: 12
+    EvasionZone: 8
+    AttackAngle: 0.8
+    RotateWeaponSpeed: 5
 --- !u!114 &3395465334301839795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -174,10 +177,10 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 1
   m_Interpolate: 0
-  m_Constraints: 84
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!135 &6666568706352983373
 SphereCollider:
@@ -350,8 +353,14 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1507692064068759602, guid: 68bf6c6f9649ac64b8030d2b70151dbf,
         type: 3}
+      propertyPath: bulletPrefab
+      value: 
+      objectReference: {fileID: 5326403822605410166, guid: 0e6e9f738dce29b4e93f612700980580,
+        type: 3}
+    - target: {fileID: 1507692064068759602, guid: 68bf6c6f9649ac64b8030d2b70151dbf,
+        type: 3}
       propertyPath: weaponData.FireRate
-      value: 30
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 5403103171529928346, guid: 68bf6c6f9649ac64b8030d2b70151dbf,
         type: 3}

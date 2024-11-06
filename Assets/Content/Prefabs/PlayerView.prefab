@@ -173,7 +173,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
@@ -192,7 +192,7 @@ PrefabInstance:
     - target: {fileID: 1507692064068759602, guid: 68bf6c6f9649ac64b8030d2b70151dbf,
         type: 3}
       propertyPath: weaponData.FireRate
-      value: 30
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 5403103171529928346, guid: 68bf6c6f9649ac64b8030d2b70151dbf,
         type: 3}

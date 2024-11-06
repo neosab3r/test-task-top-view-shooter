@@ -128,7 +128,10 @@ namespace BeeGood.Models
         public void DestroyBulletView()
         {
             View.Dispose();
-            Object.Destroy(View.gameObject);
+            if (View != null)
+            {
+                Object.Destroy(View.gameObject);
+            }
             CachedViewTransform = null;
             View = null;
         }
