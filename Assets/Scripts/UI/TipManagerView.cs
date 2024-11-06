@@ -7,14 +7,15 @@ namespace BeeGood.UI
     {
         [SerializeField] private CanvasGroup canvasGroup;
         private Coroutine coroutine;
+        private bool isShowed = false;
         
-        private void Start()
-        {
-            Show();
-        }
-
         public void Show()
         {
+            if (isShowed)
+            {
+                return;
+            }
+
             canvasGroup.alpha = 0;
             if (coroutine != null)
             {
@@ -42,6 +43,7 @@ namespace BeeGood.UI
                 }
             }
 
+            isShowed = true;
             yield return null;
         }
     }

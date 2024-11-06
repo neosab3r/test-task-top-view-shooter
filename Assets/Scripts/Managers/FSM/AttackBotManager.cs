@@ -48,7 +48,7 @@ namespace BeeGood.Managers
             
             var inAttackAngle = false;
             var attackDot = Vector3.Dot(handTransform.forward, Vector3.Normalize(bulletToPlayerDirection));
-            if (attackDot >= 0.9)
+            if (attackDot >= OwnerBotModel.Data.AttackAngle)
             {
                 inAttackAngle = true;
             }

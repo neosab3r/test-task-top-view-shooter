@@ -1,4 +1,5 @@
 ﻿using BeeGood.Extensions;
+using BeeGood.UI;
 using BeeGood.View;
 using BeeGood.Views;
 using Cinemachine;
@@ -8,6 +9,8 @@ namespace BeeGood.Managers
 {
     public class GameManager : MonoBehaviour
     {
+        [SerializeField] private TipManagerView tipManagerView;
+        [SerializeField] private MenuManagerView menuManagerView;
         [SerializeField] private CinemachineVirtualCamera mainCamera;
         [SerializeField] private PlayerView playerPrefab;
         [SerializeField] private Transform playerSpawnPoint;
@@ -31,7 +34,7 @@ namespace BeeGood.Managers
 
         private void InternalInitialize()
         {
-            botSpawnRadius = maxBotCounts;
+            botSpawnRadius = 1;
             DontDestroyOnLoad(this);
         }
         
@@ -41,6 +44,8 @@ namespace BeeGood.Managers
             {
                 EntrySystem.Instance.StopUpdateSystems();
             }
+
+            var difficult = menuManagerView.Difficult;
             Debug.LogError("StopSystems");
             var playerView = InstantiateExtension.Instantiate(playerPrefab, playerSpawnPoint.position, Quaternion.identity);
             mainCamera.Follow = playerView.transform;
@@ -53,10 +58,12 @@ namespace BeeGood.Managers
                 var direction = new Vector3(horizontal, 0, vertical);
                 var worldPosition = botSpawnPoint.position + direction * botSpawnRadius;
                 var botView = InstantiateExtension.Instantiate(botPrefab, worldPosition, Quaternion.identity);
+                botView.Setup(difficult);
                 Debug.LogError($"Spawn Bot: {botView.name}");
             }
 
             EntrySystem.Instance.StartUpdateSystems();
+            tipManagerView.Show();
             Debug.LogError("StartSystems");
         }
 

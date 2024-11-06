@@ -10,6 +10,7 @@ namespace BeeGood.Managers
         public int Stage { get; private set; }
         public int PlayerScore { get; private set; }
         public int BotScore { get; private set; }
+        
         private void Awake()
         {
             if (Instance != null)

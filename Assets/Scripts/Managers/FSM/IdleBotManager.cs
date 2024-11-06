@@ -28,7 +28,7 @@ namespace BeeGood.Managers
             OwnerBotModel.SetMovePoint(pointToMove, MinEndDistance);
             
             var distance = Vector3.Distance(OwnerBotModel.CachedTransform.position, Context.Transform.position);
-            if (distance <= MinEndDistance - 0.1)
+            if (distance <= MinEndDistance + 0.2)
             {
                 Debug.LogError($"[{nameof(IdleBotManager)}] Bot has reached patrol point.");
                 Context = null;

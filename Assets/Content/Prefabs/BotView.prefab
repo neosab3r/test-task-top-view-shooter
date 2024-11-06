@@ -54,7 +54,20 @@ MonoBehaviour:
   weaponView: {fileID: 4576949752224617203}
   handTransform: {fileID: 643633792980094617}
   aiPath: {fileID: 6206374251921744634}
-  aiSeeker: {fileID: 0}
+  easyBotData:
+    DifficultType: 1
+    MaxEvasionSpeed: 4
+    DefaultSpeed: 2
+    SearchZone: 9
+    AttackAngle: 0.9
+    RotateWeaponSpeed: 2
+  hardBotData:
+    DifficultType: 2
+    MaxEvasionSpeed: 6
+    DefaultSpeed: 4
+    SearchZone: 16
+    AttackAngle: 0.7
+    RotateWeaponSpeed: 6
 --- !u!114 &3395465334301839795
 MonoBehaviour:
   m_ObjectHideFlags: 0

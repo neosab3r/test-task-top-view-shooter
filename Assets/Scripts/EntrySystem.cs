@@ -7,8 +7,8 @@ namespace BeeGood
     public class EntrySystem : BaseEntrySystems
     {
         public static EntrySystem Instance { get; private set; }
-
-        private void Awake()
+        
+        public void Awake()
         {
             if (Instance != null)
             {
@@ -18,9 +18,7 @@ namespace BeeGood
             Instance = this;
             
             Initialize();
-            
-            GameManager.Initialize();
-            GameManager.Instance.StartGame(botCount: 1, stopSystems: true);
+            Instance.StopUpdateSystems();
         }
 
         protected override void Initialize()
