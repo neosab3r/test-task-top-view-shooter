@@ -3,6 +3,7 @@ using System.Linq;
 using BeeGood.Extensions;
 using BeeGood.Managers;
 using BeeGood.Systems;
+using BeeGood.UI;
 using BeeGood.View;
 using BeeGood.Views;
 using Pathfinding;
@@ -16,6 +17,7 @@ namespace BeeGood.Models
         public Transform CachedTransform { get; protected set; }
         public Transform CachedHandTransform { get; protected set; }
         public AIPath CachedAIPath { get; protected set; }
+        public BotData Data { get; protected set; }
         public Dictionary<GameObject, BulletModel> NearBulletModels { get; protected set; } = new();
         private BulletSystem bulletSystem;
         private BotSelectorManager rootSelectorManager;
@@ -25,6 +27,7 @@ namespace BeeGood.Models
         public BotModel(BotView view, BulletSystem bulletSystem , WeaponModel weaponModel): base(view)
         {
             WeaponModel = weaponModel;
+            Data = view.GetBotData();
             this.bulletSystem = bulletSystem;
             CachedTransform = view.transform;
             CachedHandTransform = view.GetHandTransform();
@@ -41,10 +44,15 @@ namespace BeeGood.Models
                 rootSelectorManager.Dispose();
                 rootSelectorManager = null;
             }
-            
-            var managers = new List<IBotManager>
+
+            var managers = new List<IBotManager>();
+            if (Data.DifficultType == DifficultType.Hard)
             {
-                new EvasionBotManager(),
+                managers.Add(new EvasionBotManager());
+            }
+
+            managers.AddRange(new List<IBotManager>
+            {
                 new BotSequenceManager(this, new List<IBotManager>
                 {
                     new CheckSearchZoneBotManager(),
@@ -57,8 +65,8 @@ namespace BeeGood.Models
                 }),
 
                 new IdleBotManager()
-            };
-
+            });
+            
             rootSelectorManager = new BotSelectorManager(this, managers);
         }
 
@@ -124,11 +132,26 @@ namespace BeeGood.Models
 
         public override void Dispose()
         {
+            WeaponModel = null;
+            CachedTransform = null;
+            CachedHandTransform = null;
+            CachedAIPath = null;
+            NearBulletModels.Clear();
+            NearBulletModels = null;
+            bulletSystem = null;
+            AiDestinationSetter = null;
             if (rootSelectorManager != null)
             {
                 rootSelectorManager.Dispose();
                 rootSelectorManager = null;
             }
+
+            if (View != null)
+            {
+                Object.Destroy(View.gameObject);
+            }
+
+            View = null;
         }
     }
 }

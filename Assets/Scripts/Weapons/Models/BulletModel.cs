@@ -1,4 +1,7 @@
 ﻿using BeeGood.Extensions;
+using BeeGood.Managers;
+using BeeGood.Systems;
+using BeeGood.View;
 using BeeGood.Views;
 using UnityEngine;
 
@@ -80,8 +83,22 @@ namespace BeeGood.Models
             
             if (string.Equals(tagGameObject, TargetTagEntity))
             {
-                Debug.LogWarning("Damage to Enemy Entity");
-                //Damage
+                var isPlayerWin = tagGameObject == TagExtension.BotTag;
+                if (isPlayerWin)
+                {
+                    var botSystem = EntrySystem.Instance.Get<BotSystem>();
+                    var botView = collision.gameObject.GetComponent<BotView>();
+                    var botModel = botSystem.GetBotModel(botView);
+                    botSystem.KillBot(botModel);
+                    if (botSystem.IsRemainingBots() == false)
+                    {
+                        GameManager.Instance.EndRound(true);
+                    }
+                }
+                else
+                {
+                    GameManager.Instance.EndRound(false);
+                }
                 SetReadyToDestroy();
             }
             else

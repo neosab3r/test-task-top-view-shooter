@@ -26,7 +26,7 @@ namespace BeeGood.Managers
         {
             var colliders = new Collider[1];
             var size = Physics.OverlapSphereNonAlloc(OwnerBotModel.CachedTransform.position,
-                9f, colliders, 1 << LayerMask.NameToLayer("Player"));
+                OwnerBotModel.Data.SearchZone, colliders, 1 << LayerMask.NameToLayer("Player"));
 
             if (size > 0)
             {

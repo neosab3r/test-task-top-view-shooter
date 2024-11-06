@@ -1,29 +1,46 @@
 ﻿using System;
 using BeeGood.Systems;
+using BeeGood.UI;
 using BeeGood.Views;
 using Pathfinding;
 using UnityEngine;
 
 namespace BeeGood.View
 {
+    [Serializable]
+    public class BotData
+    {
+        public DifficultType DifficultType;
+        public float MaxEvasionSpeed;
+        public float DefaultSpeed;
+        public float SearchZone;
+        public float AttackAngle;
+        public float RotateWeaponSpeed;
+    }
+    
     public class BotView : BaseView
     {
         [SerializeField] private AIDestinationSetter aiDestinationSetter;
         [SerializeField] private WeaponView weaponView;
         [SerializeField] private Transform handTransform;
         [SerializeField] private AIPath aiPath;
-        [SerializeField] private Seeker aiSeeker;
+
+        [SerializeField] private BotData easyBotData;
+        [SerializeField] private BotData hardBotData;
+        private BotData currentBotData;
         private event Action<Collider> OnTriggerEnterEvent;
         private event Action<Collider> OnTriggerExitEvent;
 
-        public Seeker GetSeeker() => aiSeeker;
+        public BotData GetBotData() => currentBotData;
         public AIPath GetAIPath() => aiPath;
         public Transform GetHandTransform() => handTransform;
         public AIDestinationSetter GetAIDestinationSetter() => aiDestinationSetter;
         public WeaponView GetWeaponView() => weaponView;
         
-        private void Start()
+        public void Setup(DifficultType type)
         {
+            currentBotData = type == DifficultType.Easy ? easyBotData : hardBotData;
+            aiPath.maxSpeed = currentBotData.DefaultSpeed;
             BaseEntrySystems.SubscribeOnAllSystemsInitialized(() =>
             {
                 EntrySystem.Instance.Get<BotSystem>().AddView(this);
@@ -48,11 +65,6 @@ namespace BeeGood.View
         private void OnTriggerExit(Collider other)
         {
             OnTriggerExitEvent?.Invoke(other);
-        }
-
-        private void OnDrawGizmos()
-        {
-            //Gizmos.DrawWireSphere(transform.position, 9f);
         }
     }
 }

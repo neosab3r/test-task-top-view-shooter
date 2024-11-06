@@ -28,13 +28,8 @@ namespace BeeGood.Managers
             
             var handLookRotation = Quaternion.LookRotation(handDir, Vector3.up);
             
-            handTransform.rotation = Quaternion.Slerp(handTransform.rotation, handLookRotation, 2f * Time.deltaTime);
+            handTransform.rotation = Quaternion.Slerp(handTransform.rotation, handLookRotation, OwnerBotModel.Data.RotateWeaponSpeed * Time.deltaTime);
             Debug.LogError($"Rotate TO Player");
-            var attackDot = Vector3.Dot(handTransform.forward, Vector3.Normalize(handDir));
-            if (attackDot >= 0.9)
-            {
-                
-            }
 
             return BotManagerState.Running;
         }

@@ -10,8 +10,7 @@ namespace BeeGood.Managers
         private ABPath currentPath = null;
         private BulletModel currentBullet = null;
         private const float MinEndDistance = 0.1f;
-        private const float MaxEvasionSpeed = 4f;
-        private const float DefaultEvasionSpeed = 2f;
+        
         public override BotManagerState Evaluate()
         {
             var aiPath = OwnerBotModel.View.GetAIPath();
@@ -65,7 +64,7 @@ namespace BeeGood.Managers
                     Debug.DrawLine(currentPath.vectorPath[j], currentPath.vectorPath[j + 1], Color.red, 10);
                 }
 
-                aiPath.maxSpeed = MaxEvasionSpeed;
+                aiPath.maxSpeed = OwnerBotModel.Data.MaxEvasionSpeed;
                 aiPath.endReachedDistance = MinEndDistance;
                 aiPath.canSearch = false;
                 aiPath.SetPath(currentPath);
@@ -82,7 +81,7 @@ namespace BeeGood.Managers
             if (currentPath != null)
             {
                 Debug.LogError("STOP EXIT");
-                aiPath.maxSpeed = DefaultEvasionSpeed;
+                aiPath.maxSpeed = OwnerBotModel.Data.DefaultSpeed;
                 aiPath.canSearch = true;
                 currentPath = null;
                 currentBullet = null;

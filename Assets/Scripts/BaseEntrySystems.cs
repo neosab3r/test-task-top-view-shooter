@@ -4,9 +4,21 @@ using UnityEngine;
 
 public abstract class BaseEntrySystems : MonoBehaviour
 {
+    public bool IsStopUpdate { get; protected set; }
+    
     private readonly List<ISystem> systems = new();
     private static event Action OnAllSystemsInitializedEvent;
     private static bool isInitialized;
+    
+    public static void SubscribeOnAllSystemsInitialized(Action callback)
+    {
+        if (isInitialized)
+        {
+            callback?.Invoke();
+        }
+        OnAllSystemsInitializedEvent += callback;
+    }
+    
     protected virtual void Initialize()
     {
         InitializeSystems();
@@ -23,16 +35,13 @@ public abstract class BaseEntrySystems : MonoBehaviour
         }
     }
 
-    public virtual void PostInitSystems()
-    {
-        foreach (var system in systems)
-        {
-            
-        }
-    }
-
     public void Update()
     {
+        if (IsStopUpdate)
+        {
+            return;
+        }
+        
         var dt = Time.deltaTime;
         foreach (var system in systems)
         {
@@ -43,15 +52,14 @@ public abstract class BaseEntrySystems : MonoBehaviour
         }
     }
 
-    protected void AddSystem(ISystem system)
+    public void StopUpdateSystems()
     {
-        if (systems.Contains(system))
-        {
-            Debug.LogError($"[{nameof(BaseEntrySystems)}] has already contains {nameof(system)}");
-            return;
-        }
-        
-        systems.Add(system);
+        IsStopUpdate = true;
+    }
+
+    public void StartUpdateSystems()
+    {
+        IsStopUpdate = false;
     }
     
     public TK Get<TK>() where TK : ISystem
@@ -68,16 +76,26 @@ public abstract class BaseEntrySystems : MonoBehaviour
         return default;
     }
 
-    public static void SubscribeOnAllSystemsInitialized(Action callback)
+    protected void AddSystem(ISystem system)
     {
-        if (isInitialized)
+        if (systems.Contains(system))
         {
-            callback?.Invoke();
+            Debug.LogError($"[{nameof(BaseEntrySystems)}] has already contains {nameof(system)}");
+            return;
         }
-        OnAllSystemsInitializedEvent += callback;
+        
+        systems.Add(system);
     }
 
     private void OnDestroy()
+    {
+        foreach (var system in systems)
+        {
+            system.Dispose();
+        }
+    }
+
+    public virtual void DisposeSystems()
     {
         foreach (var system in systems)
         {
